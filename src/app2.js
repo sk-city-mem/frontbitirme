@@ -44,7 +44,7 @@ console.log(datadata1);
       <Container>
         <h1 className="text-center mt-4">Şehir hafizasi</h1>
         <Form>
-          <InputGroup className="my-3">
+          <InputGroup className="my-3 me-2">
             {/* onChange for search */}
             <Form.Control
               onChange={(e) => setSearchContents(e.target.value)}
@@ -92,6 +92,7 @@ console.log(datadata1);
                 placeholder="DateRange"
                 value={date2}
                 onChange={(e) => setDate2(e.target.value)}
+                className="nn"
               />
             </InputGroup>
             </Col>

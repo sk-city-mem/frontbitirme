@@ -56,7 +56,7 @@ const DragDrop = () => {
             multiple
             onChange={(event) => setFiles(event.target.files)}
             hidden
-            accept="image/png, image/jpeg"
+            accept="application/pdf"
             ref={inputRef}
           />
           <Button onClick={() => inputRef.current.click()} variant="primary" type="submit">Dosyaları Seç</Button>
