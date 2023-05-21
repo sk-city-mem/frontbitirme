@@ -109,7 +109,13 @@ flex: 1;
     margin-top: 13%;
   }
 
-
+  em {
+    /* Change highlight background color to black */
+    background: #c1d8f0;
+    
+    /* Change highlight text color to red */
+    color: black;
+  }
 
 
   #form-file-upload {

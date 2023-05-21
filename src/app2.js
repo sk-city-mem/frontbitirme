@@ -128,7 +128,9 @@ console.log(datadata1);
                   <hr/>
                   <div class="text-section">
                   
-                    <p class="card-text">{d.highlights.content}</p>
+                    <p class="card-text">
+                    <div dangerouslySetInnerHTML={{__html: d.highlights.content}}></div>
+                      </p>
                   </div> 
                
                 </div>
