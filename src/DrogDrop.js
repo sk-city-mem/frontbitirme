@@ -1,30 +1,3 @@
-// import { useState } from "react";
-// import { FileUploader } from "react-drag-drop-files";
-
-// import "./styles2.css";
-
-// const fileTypes = ["PDF"];
-
-// export default function DrogDrop() {
-//   const [file, setFile] = useState(null);
-//   const handleChange = (file) => {
-//     setFile(file);
-//   };
-//   return (
-//     <div className="App">
-//       <h1>Dosya yükleme sayfası</h1>
-//       <FileUploader
-//         classes={"drop_area drop_zone"}
-//         multiple={true}
-//         handleChange={handleChange}
-//         name="file"
-//         types={fileTypes}
-//       />
-//       <p>{file ? `File name: ${file[0].name}` : "daha dosya yüklenmedi"}</p>
-//     </div>
-//   );
-// }
-
 import { useState, useRef } from "react";
 import "./styleDrog.css";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
