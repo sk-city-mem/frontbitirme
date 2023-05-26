@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -6,6 +6,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { data } from "./data.js";
 import { data2 } from "./data2.js";
+import axios from 'axios';
 
 //import Container from 'react-bootstrap/Container';
 import Row from "react-bootstrap/Row";
@@ -25,6 +26,25 @@ function App2() {
  const lastIndex=25;
 
   const [currentPage, setCurrentPage] = useState(1);
+//   useEffect(() => {
+//  getData()
+//   }, []);
+//   const getData = async () => {
+//     const url = "api endpoint";
+//     try {
+//     const response = await axios.get(url);
+//     console.log(response.data);
+//     if (response.status === 200) {
+//       console.log(response.data);
+//     }
+//     else{
+//       console.log("hata var");
+//     }
+//     } 
+//     catch (error) {
+//       console.log(error);
+//     }
+//     };
   const numbers = [...Array(25 +1).keys()].slice(1);
 console.log(currentPage);
   // const handleChange = (e) => {
@@ -42,13 +62,14 @@ console.log(datadata1);
   return (
     <div>
       <Container>
-        <h1 className="text-center mt-4">Şehir hafizasi</h1>
+        <h1 className="text-center mt-4">Sakarya Yerel Gazeteler</h1>
         <Form>
           <InputGroup className="my-3 me-2">
             {/* onChange for search */}
             <Form.Control
               onChange={(e) => setSearchContents(e.target.value)}
-              placeholder="Search contents"
+              placeholder="İçerik Ara"
+              className="nn"
             />
           </InputGroup>
         </Form>
@@ -63,7 +84,8 @@ console.log(datadata1);
               {/* onChange for search */}
               <Form.Control
                 onChange={(e) => setSearchName(e.target.value)}
-                placeholder="Search Name"
+                placeholder="Gazete İsmi Ara"
+                className="nn"
               />
             </InputGroup>
             </Col>
@@ -78,6 +100,7 @@ console.log(datadata1);
                 placeholder="DateRange"
                 value={date1}
                 onChange={(e) => setDate1(e.target.value)}
+                className="nn"
               />
             </InputGroup>
             </Col>
@@ -112,7 +135,8 @@ console.log(datadata1);
                   <Col lg={4}>
                 <img
                   src="https://images.unsplash.com/photo-1684178801256-1e8ad802fa57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=418&q=80"
-                  class="card1img"
+               // src="./2.jpg"
+                 class="card1img"
                   alt="..."
                 />
                 </Col>

@@ -1,11 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import "./styleDrog.css";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { FilePdfFill } from 'react-bootstrap-icons';
+import axios from 'axios';
+
 const DragDrop = () => {
   const [files, setFiles] = useState(null);
   const inputRef = useRef();
 
+  
   const handleDragOver = (event) => {
     event.preventDefault();
   };
@@ -27,7 +30,25 @@ const DragDrop = () => {
     //   }  
     // )
   };
-
+  // useEffect(() => {
+  //   getData()
+  //    }, []);
+  //    const getData = async () => {
+  //      const url = "api endpoint";
+  //      try {
+  //      const response = await axios.get(url, config);
+  //      console.log(response.data);
+  //      if (response.status === 200) {
+  //        console.log(response.data);
+  //      }
+  //      else{
+  //        console.log("hata var");
+  //      }
+  //      } 
+  //      catch (error) {
+  //        console.log(error);
+  //      }
+  //      };
   if (files) return (
     <div className="uploads">
          <ol> 

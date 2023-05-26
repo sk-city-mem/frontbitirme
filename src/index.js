@@ -11,8 +11,8 @@ root.render(
   <React.StrictMode>
     {/* <App/> */}
        <App2 />    
-      {/* <SignIn />   */}
-      {/* <DrogDrop/>   */}
+       {/* <SignIn />    */}
+       {/* <DrogDrop/>    */}
   </React.StrictMode>
 );
 

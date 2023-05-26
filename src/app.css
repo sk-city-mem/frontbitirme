@@ -62,9 +62,10 @@ flex: 1;
     /* padding-bottom: 10px; */
     border-radius: 0.7em;
   }
-  /* .nn{
-    background-color:#696969;
-  } */
+   .nn{
+    /* background-color:#696969; */
+    border-radius: 50px;
+  } 
   .card-body {
     display: flex;
     /* flex-direction: row; */
@@ -116,7 +117,7 @@ flex: 1;
 
   em {
     /* Change highlight background color to black */
-    background: #c1d8f0;
+    background: yellow;
     
     /* Change highlight text color to red */
     color: black;

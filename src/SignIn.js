@@ -1,6 +1,27 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import axios from 'axios';
 
 export default function Login() {
+
+   // useEffect(() => {
+  //   getData()
+  //    }, []);
+  //    const getData = async () => {
+  //      const url = "api endpoint";
+  //      try {
+  //      const response = await axios.get(url, config);
+  //      console.log(response.data);
+  //      if (response.status === 200) {
+  //        console.log(response.data);
+  //      }
+  //      else{
+  //        console.log("hata var");
+  //      }
+  //      } 
+  //      catch (error) {
+  //        console.log(error);
+  //      }
+  //      };
   return (
     <div>
       <Container>
