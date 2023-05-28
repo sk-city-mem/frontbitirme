@@ -58,8 +58,8 @@ console.log(currentPage);
   //     setLang((prev) => prev.filter((x) => x !== value));
   //   }
   // };
-const datadata1=data2[0].result.date.toString().split('T')[0];
-console.log(datadata1);
+// const datadata1=data2[0].result.date.toString().split('T')[0];
+
   return (
     <div>
       <Container>
