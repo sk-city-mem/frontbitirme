@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { data } from "./data.js";
 import { data2 } from "./data2.js";
 import axios from 'axios';
-
+import { Button } from "react-bootstrap";
 //import Container from 'react-bootstrap/Container';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -29,22 +29,23 @@ function App2() {
 //   useEffect(() => {
 //  getData()
 //   }, []);
-//   const getData = async () => {
-//     const url = "api endpoint";
-//     try {
-//     const response = await axios.get(url);
-//     console.log(response.data);
-//     if (response.status === 200) {
-//       console.log(response.data);
-//     }
-//     else{
-//       console.log("hata var");
-//     }
-//     } 
-//     catch (error) {
-//       console.log(error);
-//     }
-//     };
+  const getData = async (searchContents,searchName,pagesize,currentPage,date1,date2) => {
+    const url = `localhost:3000/pdf-news-doc/?content=${searchContents}&from=${date1}&to=${date2}&name=${searchName}&pageNo=${currentPage}&pageSize=${pagesize}`;
+    try {
+    const response = await axios.get(url);
+    console.log(response.data);
+    if (response.status === 200) {
+      console.log(response.data);
+    }
+    else{
+      console.log("hata var");
+    }
+    } 
+    catch (error) {
+      console.log(error);
+    }
+    };
+//localhost:3000/pdf-news-doc/?content=İNDİRİM BEKLENTİSİ&serialname=26&from=1997-06-25T21:00:00.000Z&to=1997-06-25T22:00:00.000Z&name=akşam&pageNo=1&pageSize=1
   const numbers = [...Array(25 +1).keys()].slice(1);
 console.log(currentPage);
   // const handleChange = (e) => {
@@ -79,7 +80,7 @@ console.log(datadata1);
         <Col lg={12}>
           <Form>
             <Row>
-              <Col lg={8}>
+              <Col lg={6}>
             <InputGroup className="my-5">
               {/* onChange for search */}
               <Form.Control
@@ -117,6 +118,16 @@ console.log(datadata1);
                 onChange={(e) => setDate2(e.target.value)}
                 className="nn"
               />
+            </InputGroup>
+            </Col>
+            <Col lg={2}>
+            
+            <InputGroup className="my-4">
+              
+              {/* onChange for search */}
+              <Button variant="primary" type="submit" className="nn" onClick={()=>getData(searchContents,searchName,pagesize,currentPage,date1,date2)} >
+             uygula
+           </Button>
             </InputGroup>
             </Col>
             </Row>
@@ -242,14 +253,17 @@ console.log(datadata1);
   function prePage() {
     if (currentPage !== firstIndex) {
       setCurrentPage(currentPage - 1);
+      getData(searchContents,searchName,pagesize,currentPage,date1,date2);
     }
   }
   function changeCPage(id) {
     setCurrentPage(id);
+    getData(searchContents,searchName,pagesize,currentPage,date1,date2);
   }
   function nextPage() {
     if (currentPage !== lastIndex) {
       setCurrentPage(currentPage + 1);
+      getData(searchContents,searchName,pagesize,currentPage,date1,date2);
     }
   }
 }

@@ -7,6 +7,7 @@ import App2 from './app2';
 import SignIn from './SignIn'; 
 import DrogDrop from './DrogDrop'; 
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -15,8 +16,9 @@ root.render(
     <Route path='/' element={<App2/>} />
     <Route path='/signin' element={<SignIn/>} />
     <Route path='/drogdrop' element={<DrogDrop/>} />
-      </Routes>
-       </Router>
+   
+    </Routes>
+     </Router>
   </React.StrictMode>
 );
 

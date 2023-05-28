@@ -1,8 +1,46 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import axios from 'axios';
+import { useState } from "react";
+import swal from 'sweetalert';
 
+
+ 
 export default function Login() {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
+  async function loginUser(credentials) {
+    return fetch('sign in api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    })
+      .then(data => data.json())
+   }
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const response = await loginUser({
+      email,
+      password
+    });
+    if ('accessToken' in response) {
+      swal("Success", response.message, "success", {
+        buttons: false,
+        timer: 2000,
+      })
+      .then((value) => {
+        localStorage.setItem('accessToken', response['accessToken']);
+        localStorage.setItem('user', JSON.stringify(response['user']));
+        window.location.href = "/dropdrop";
+      });
+    }
+    else {
+      swal("Failed", response.message, "error");
+    }
+  }
    // useEffect(() => {
   //   getData()
   //    }, []);
@@ -34,12 +72,12 @@ export default function Login() {
                   <h2 className="fw-bold mb-2 text-uppercase text-center ">Yönetici Paneli</h2>
                   {/* <p className=" mb-5">Please enter your login and password!</p> */}
                   <div className="mb-3">
-                    <Form>
+                    <Form  onSubmit={handleSubmit}>
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>
                           Email
                         </Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
+                        <Form.Control type="text" placeholder="Enter email"  required onChange={(e) => setEmail(e.target.value)} />
                       </Form.Group>
 
                       <Form.Group
@@ -47,7 +85,7 @@ export default function Login() {
                         controlId="formBasicPassword"
                       >
                         <Form.Label>Şifre</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
+                        <Form.Control type="password" placeholder="Password" required onChange={(e) => setPassword(e.target.value)} />
                       </Form.Group>
                       <Form.Group
                         className="mb-3"

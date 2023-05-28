@@ -3,6 +3,7 @@ import "./styleDrog.css";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { FilePdfFill } from 'react-bootstrap-icons';
 import axios from 'axios';
+import SignIn from './SignIn'; 
 
 const DragDrop = () => {
   const [files, setFiles] = useState(null);
@@ -49,6 +50,15 @@ const DragDrop = () => {
   //        console.log(error);
   //      }
   //      };
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    window.location.href = "/SignIn";
+  };
+  const token = localStorage.getItem('accessToken');
+  // if(!token) {
+  //   return <SignIn />
+  // }
   if (files) return (
     <div className="uploads">
          <ol> 
@@ -58,6 +68,11 @@ const DragDrop = () => {
             
             <Button onClick={() => setFiles(null)} variant="danger" type="submit">İptal</Button>
             <Button onClick={handleUpload} variant="success" type="submit">Yükle</Button>
+            
+        </div>
+        <div className="actions">
+            
+            <Button onClick={handleLogout} variant="danger" type="submit">Çıkış yap</Button>
             
         </div>
     </div>
@@ -81,6 +96,7 @@ const DragDrop = () => {
             ref={inputRef}
           />
           <Button onClick={() => inputRef.current.click()} variant="primary" type="submit">Dosyaları Seç</Button>
+          <Button onClick={handleLogout}  variant="danger" type="submit">Çıkış yap</Button>
           {/* <button onClick={() => inputRef.current.click()}>Select Files</button> */}
         </div>
     </>
