@@ -6,48 +6,77 @@ import InputGroup from "react-bootstrap/InputGroup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { data } from "./data.js";
 import { data2 } from "./data2.js";
-import axios from 'axios';
+import axios from "axios";
 import { Button } from "react-bootstrap";
 //import Container from 'react-bootstrap/Container';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import { createSearchParams, useNavigate,useSearchParams } from "react-router-dom";
 
 function App2() {
-  const [contacts, setContacts] = useState(data);
-  const [dummy, setDummy] = useState(data2);
+  //const [contacts, setContacts] = useState(data);
+  const [data, setData] = useState(data2);
   const [searchContents, setSearchContents] = useState("");
-  const [ searchName,  setSearchName] = useState("");
-  const [date1, setDate1] = useState(new Date());
-  const [date2, setDate2] = useState(new Date());
-  const pagesize=10;
+  const [searchName, setSearchName] = useState("");
+  const [date1, setDate1] = useState();
+  const [date2, setDate2] = useState();
 
- const firstIndex=1;
- const lastIndex=25;
+  const navigate = useNavigate();
 
-  const [currentPage, setCurrentPage] = useState(1);
-//   useEffect(() => {
-//  getData()
-//   }, []);
-  const getData = async (searchContents,searchName,pagesize,currentPage,date1,date2) => {
-    const url = `localhost:3000/pdf-news-doc/?content=${searchContents}&from=${date1}&to=${date2}&name=${searchName}&pageNo=${currentPage}&pageSize=${pagesize}`;
+  const pagesize = 10;
+
+  const firstIndex = 0;
+  const lastIndex = 25;
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  //   useEffect(() => {
+  //  getData()
+  //   }, []);
+
+  const navigateData = () =>{
+    console.log(date1)
+    navigate({
+      pathname: "",
+      search: createSearchParams({
+          ...(currentPage && {pageNo: currentPage}),
+          ...(searchContents && {content: searchContents}),
+          ...(date1 &&  {from:new Date(date1).toISOString()}),
+          ...(date2 &&  {to:new Date(date2).toISOString()}),
+          ...(searchName && {name: searchName }),
+      }).toString()
+    });
+  }
+
+  useEffect(()=>{
+    navigateData()
+  },[currentPage])
+
+  useEffect(()=>{
+    getData()
+  },[searchParams])
+
+
+  const getData = async () => {
+    console.log("HERE2")
+    const url = `http://localhost:3000/pdf-news-doc/?${searchParams}`;
     try {
-    const response = await axios.get(url);
-    console.log(response.data);
-    if (response.status === 200) {
+      const response = await axios.get(url);
+      setData(response.data);
       console.log(response.data);
-    }
-    else{
-      console.log("hata var");
-    }
-    } 
-    catch (error) {
+      if (response.status === 200) {
+        console.log(response.data);
+      } else {
+        console.log("hata var");
+      }
+    } catch (error) {
       console.log(error);
     }
-    };
-//localhost:3000/pdf-news-doc/?content=İNDİRİM BEKLENTİSİ&serialname=26&from=1997-06-25T21:00:00.000Z&to=1997-06-25T22:00:00.000Z&name=akşam&pageNo=1&pageSize=1
-  const numbers = [...Array(25 +1).keys()].slice(1);
-console.log(currentPage);
+  };
+  //localhost:3000/pdf-news-doc/?content=İNDİRİM BEKLENTİSİ&serialname=26&from=1997-06-25T21:00:00.000Z&to=1997-06-25T22:00:00.000Z&name=akşam&pageNo=1&pageSize=1
+  const numbers = [...Array(25 + 1).keys()].slice(1);
+  console.log(currentPage);
   // const handleChange = (e) => {
   //   const { value, checked } = e.target;
   //   if (checked) {
@@ -58,7 +87,7 @@ console.log(currentPage);
   //     setLang((prev) => prev.filter((x) => x !== value));
   //   }
   // };
-// const datadata1=data2[0].result.date.toString().split('T')[0];
+  // const datadata1=data2[0].result.date.toString().split('T')[0];
 
   return (
     <div>
@@ -81,96 +110,98 @@ console.log(currentPage);
           <Form>
             <Row>
               <Col lg={6}>
-            <InputGroup className="my-5">
-              {/* onChange for search */}
-              <Form.Control
-                onChange={(e) => setSearchName(e.target.value)}
-                placeholder="Gazete İsmi Ara"
-                className="nn"
-              />
-            </InputGroup>
-            </Col>
-            <Col lg={2}>
-            <label>Başlangıç Tarih</label>
-            <InputGroup className="my-3">
-            
-              {/* onChange for search */}
-              <Form.Control
-                type="date"
-                name="datepic1"
-                placeholder="DateRange"
-                value={date1}
-                onChange={(e) => setDate1(e.target.value)}
-                className="nn"
-              />
-            </InputGroup>
-            </Col>
-            <Col lg={2}>
-            <label>Bitiş Tarihi</label>
-            <InputGroup className="my-3">
-              
-              {/* onChange for search */}
-              <Form.Control
-                type="date"
-                name="datepic2"
-                placeholder="DateRange"
-                value={date2}
-                onChange={(e) => setDate2(e.target.value)}
-                className="nn"
-              />
-            </InputGroup>
-            </Col>
-            <Col lg={2}>
-            
-            <InputGroup className="my-4">
-              
-              {/* onChange for search */}
-              <Button variant="primary" type="submit" className="nn" onClick={()=>getData(searchContents,searchName,pagesize,currentPage,date1,date2)} >
-             uygula
-           </Button>
-            </InputGroup>
-            </Col>
+                <InputGroup className="my-5">
+                  {/* onChange for search */}
+                  <Form.Control
+                    onChange={(e) => setSearchName(e.target.value)}
+                    placeholder="Gazete İsmi Ara"
+                    className="nn"
+                  />
+                </InputGroup>
+              </Col>
+              <Col lg={2}>
+                <label>Başlangıç Tarih</label>
+                <InputGroup className="my-3">
+                  {/* onChange for search */}
+                  <Form.Control
+                    type="date"
+                    name="datepic1"
+                    placeholder="DateRange"
+                    value={date1}
+                    onChange={(e) => setDate1(e.target.value)}
+                    className="nn"
+                  />
+                </InputGroup>
+              </Col>
+              <Col lg={2}>
+                <label>Bitiş Tarihi</label>
+                <InputGroup className="my-3">
+                  {/* onChange for search */}
+                  <Form.Control
+                    type="date"
+                    name="datepic2"
+                    placeholder="DateRange"
+                    value={date2}
+                    onChange={(e) => setDate2(e.target.value)}
+                    className="nn"
+                  />
+                </InputGroup>
+              </Col>
+              <Col lg={2}>
+                <InputGroup className="my-4">
+                  {/* onChange for search */}
+                  <Button
+                    variant="primary"
+                    //type="submit"
+                    className="nn"
+                    onClick={() =>
+                      navigateData()
+                    }
+                  >
+                    uygula
+                  </Button>
+                </InputGroup>
+              </Col>
             </Row>
           </Form>
-          
-          {data2
+
+          {data
             // .filter((item) => {
             //   return searchContents.toLowerCase() === ""
             //     ? item
             //     : item.first_name.toLowerCase().includes(searchContents);
             // })
             .map((d, i) => (
-              
               <div class="card1 dark" key={i}>
                 <Row>
-                  <Col lg={4}>
-                <img
-                  src="https://images.unsplash.com/photo-1684178801256-1e8ad802fa57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=418&q=80"
-               // src="./2.jpg"
-                 class="card1img"
-                  alt="..."
-                />
-                </Col>
-                <Col lg={8}>
-                <div class="card-body">
-                  <div class="text-header">
-                  <div class="text-first">
-                    {d.result.name}
-                  </div>
-                  <div class="text-tarih">
-                  {d.result.date.toString().split('T')[0]}
-                  </div>
-                  </div>
-                  <hr/>
-                  <div class="text-section">
-                  
-                    <p class="card-text">
-                    <div dangerouslySetInnerHTML={{__html: d.highlights.content}}></div>
-                      </p>
-                  </div> 
-               
-                </div>
-                </Col>
+                  <Col lg={3} onClick={()=>window.open(d?.result?.fileURL, '_blank')}>
+                    <img
+                      src={d?.result?.fileURL+"-thumbnail.jpg"}
+                      // src="./2.jpg"
+                      class="card1img"
+                      alt="..."
+                    />
+                  </Col>
+                  <Col lg={9}>
+                    <div class="card-body">
+                      <div class="text-header">
+                        <div class="text-first">{d.result.name}</div>
+                        <div class="text-tarih">
+                          {d.result.date.toString().split("T")[0]}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="text-section">
+                        <p class="card-text">
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: d?.highlights?.content,
+                            }}
+                          ></div>
+                        </p>
+                      </div>
+                    </div>
+                  </Col>
                 </Row>
               </div>
             ))}
@@ -215,7 +246,7 @@ console.log(currentPage);
             <nav>
               <ul className="pagination">
                 <li className="page-item">
-                  <a className="page-link" href="#" onClick={() => prePage()}>
+                  <a className="page-link" onClick={() => prePage()}>
                     Prev
                   </a>
                 </li>
@@ -228,7 +259,7 @@ console.log(currentPage);
                   >
                     <a
                       className="page-link"
-                      href="#"
+                      
                       onClick={() => changeCPage(n)}
                     >
                       {n}
@@ -236,7 +267,7 @@ console.log(currentPage);
                   </li>
                 ))}
                 <li className="page-item">
-                  <a className="page-link" href="#" onClick={() => nextPage()}>
+                  <a className="page-link" onClick={() => nextPage()}>
                     Next
                   </a>
                 </li>
@@ -248,22 +279,17 @@ console.log(currentPage);
     </div>
   );
 
-
-
   function prePage() {
     if (currentPage !== firstIndex) {
       setCurrentPage(currentPage - 1);
-      getData(searchContents,searchName,pagesize,currentPage,date1,date2);
     }
   }
   function changeCPage(id) {
     setCurrentPage(id);
-    getData(searchContents,searchName,pagesize,currentPage,date1,date2);
   }
   function nextPage() {
     if (currentPage !== lastIndex) {
       setCurrentPage(currentPage + 1);
-      getData(searchContents,searchName,pagesize,currentPage,date1,date2);
     }
   }
 }
