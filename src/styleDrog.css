@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: Garamond, serif;
   background-color: white, #f7f7f7;
 }
 h1, h2, h3, h4, h5, h6, p{
@@ -27,11 +27,8 @@ h1, h2, h3, h4, h5, h6, p{
   justify-content: center;
   align-items: center;
   width: 50%;
-  height: 20%;
   margin: auto;
-  margin-top: 10%;
   border: 5px  rgb(117, 112, 112);
-  padding: 2rem;
 }
 .dropzone {
   display: flex;
@@ -41,7 +38,6 @@ h1, h2, h3, h4, h5, h6, p{
   width: 50%;
   height: 20%;
   margin: auto;
-  margin-top: 10%;
   border: 5px dashed #0209d9;
   padding: 2rem;
 }
