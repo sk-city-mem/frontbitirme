@@ -141,8 +141,8 @@ const DragDrop = () => {
   return (
     <>
       <Form>
-        <div className="actions">
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+        <div className="actions" >
+          <Form.Group className="mb-3" controlId="formBasicEmail" style={{width:'50%',margin:'auto'}}>
             <Form.Label>Gazete İsmi</Form.Label>
             <Form.Control
               type="text"

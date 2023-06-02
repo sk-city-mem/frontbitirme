@@ -63,8 +63,19 @@ flex: 1;
   }
    .nn{
     /* background-color:#696969; */
-    border-radius: 50px;
+    border-radius: 20px;
   } 
+  .margin-duzeltme{
+  margin-left: 50px;
+  margin-bottom: -60px !important;
+  width: 70%;
+  }
+  .mlduzeltme{
+    justify-content : center;
+  }
+  .margin_input{
+    margin-bottom: 10px !important;
+  }
   .card-body {
     display: flex;
     /* flex-direction: row; */

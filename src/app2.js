@@ -103,7 +103,7 @@ function App2() {
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Sakarya_University_logo.svg/1200px-Sakarya_University_logo.svg.png"
           ></img>
         </div>
-        <h1 className="text-center mt-4">Sakarya Yerel Gazeteler</h1>
+        <h1 className="text-center   mt-4 mlduzeltme ">Sakarya Yerel Gazeteler</h1>
       </Stack>
       <hr />
       <Container>
@@ -116,7 +116,7 @@ function App2() {
               }
             }}
           >
-            <Row>
+            <Row className="margin_input">
             <Col lg={3}>
                 <Form.Group>
                   {/* onChange for search */}
@@ -168,23 +168,23 @@ function App2() {
                 </Form.Group>
               </Col>
               <Col lg={2}>
-                <InputGroup >
+                <Form.Group >
                   {/* onChange for search */}
                   <Button
                     variant="primary"
                     //type="submit"
-                    className="nn"
+                    className="nn margin-duzeltme"
                     onClick={() => navigateData()}
                   >
                     Ara
                   </Button>
-                </InputGroup>
+                </Form.Group>
               </Col>
             </Row>
           </Form>
 
           {data?.map((d, i) => (
-            <div class="card1 dark" key={i}>
+            <div class="card1 dark nn" key={i}>
               <Row>
                 <Col
                   lg={3}
