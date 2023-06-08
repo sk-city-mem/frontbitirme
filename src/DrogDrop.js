@@ -1,20 +1,27 @@
 import { useState, useRef, useEffect } from "react";
 import "./styleDrog.css";
-import {
-  Col,
-  Button,
-  Row,
-  Container,
-  Card,
-  Form,
-  Modal,
-  Spinner,
-} from "react-bootstrap";
+import { Col, Row, Form, Modal, Spinner } from "react-bootstrap";
 import { FilePdfFill } from "react-bootstrap-icons";
 import axios from "axios";
 import SignIn from "./SignIn";
 import { useAuthContext } from "./AuthProvider";
 import swal from "sweetalert";
+import CustomAppbar from "./CustomAppBar";
+import {
+  TextField,
+  Box,
+  CardActionArea,
+  CardContent,
+  Paper,
+  Container,
+  Card,
+  Typography,
+  Stack,
+  Button,
+  Dialog,
+  Divider,
+} from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const DragDrop = () => {
   const [files, setFiles] = useState(null);
@@ -129,105 +136,120 @@ const DragDrop = () => {
     updateLastUploadId(res.data.id);
   };
 
-  const handleLogout = () => {
-    context.updateToken()
-    localStorage.removeItem("user");
-  };
-
   const token = localStorage.getItem("accessToken");
   // if(!token) {
   //   return <SignIn />
   // }
   return (
     <>
-      <Form>
-        <div className="actions" >
-          <Form.Group className="mb-3" controlId="formBasicEmail" style={{width:'50%',margin:'auto'}}>
-            <Form.Label>Gazete İsmi</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Newspaper Name"
-              required
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Form.Group>
-
-          <>
-            <div className="uploads">
-              <ol>
-                {Array.from(files || []).map((file, idx) => (
-                  <li key={idx}>
-                    <FilePdfFill color="red" size={40}></FilePdfFill>
-                    {file.name}
-                  </li>
-                ))}
-              </ol>
-              <div className="actions">
-                <Button onClick={() => setFiles(null)} variant="danger">
-                  İptal
-                </Button>
-                <Button onClick={sendUploadRequest} variant="success">
-                  Yükle
-                </Button>
-                <Button onClick={handleLogout} variant="danger">
-                  Çıkış yap
-                </Button>
-              </div>
-            </div>
-          </>
-
-          <>
-            <div
-              className="dropzone"
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-            >
-              <h1>Dosyaları Yüklemek İçin Sürükle ve Bırak</h1>
-              <h1>Veya</h1>
-              <input
-                type="file"
-                multiple
-                onChange={(event) => setFiles(event.target.files)}
-                hidden
-                accept="application/pdf"
-                ref={inputRef}
-              />
-              <Button
-                onClick={() => inputRef.current.click()}
-                variant="primary"
-              >
-                Dosyaları Seç
-              </Button>
-              {/* <button onClick={() => inputRef.current.click()}>Select Files</button> */}
-              <h6>
-                {" "}
-                {inQueueCount !== -1 && (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-
-                    {" "+(inQueueCount + 1) + " elements in process queue"}
-                  </>
-                )}
-              </h6>
-            </div>
-          </>
-        </div>
-
-        <Modal
-          backdrop="static"
-          size="lg"
-          show={!context.isLoggedIn}
-          aria-labelledby="example-modal-sizes-title-lg"
+      <CustomAppbar />
+      <Container maxWidth="md" flexGrow>
+        <Box
+          display="flex"
+          sx={{ marginTop: 2, justifyContent: "center", alignSelf: "center" }}
         >
-          <SignIn />
-        </Modal>
-      </Form>
+          <form>
+            <Typography variant="h5" fontWeight="bold">Gazete Yükle:</Typography>
+            <Stack spacing={2} alignItems="center">
+              <Box>
+                <TextField
+                  fullWidth
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  variant="filled"
+                  label="Gazete İsmi"
+                  required
+                />
+              </Box>
+              {files?.length > 0 && (
+                <Card display="inline-flex" component={Box} width="100%" variant="outlined" sx={{borderRadius:3}}>
+                  <Box maxHeight={200} overflow="auto" flexGrow={1}>
+                    <ol>
+                      {Array.from(files || []).map((file, idx) => (
+                        <>
+                        <li key={idx}>
+                          <FilePdfFill color="red" size={40}></FilePdfFill>
+                          {file.name}
+                        </li>
+                        <Divider/>
+                        </>
+                      ))}
+                    </ol>
+                  </Box>
+
+                  <Button
+                    onClick={() => setFiles(null)}
+                    variant="contained"
+                    color="error"
+                  >
+                    Temizle
+                  </Button>
+                </Card>
+              )}
+              <Card
+                onClick={() => inputRef.current.click()}
+                sx={{
+                  border: "6px dashed black",
+                  borderRadius: 3,
+                  borderColor: "",
+                }}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                variant="outlined"
+              >
+                <CardActionArea>
+                  <CardContent>
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      marginBottom={4}
+                    >
+                      <UploadFileIcon sx={{ fontSize: 80 }} color="primary" />
+                    </Box>
+                    <Typography variant="h5">
+                      Dosyaları Yüklemek İçin Sürükle ve Bırak veya Tıklayın
+                    </Typography>
+
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(event) => setFiles(event.target.files)}
+                      hidden
+                      accept="application/pdf"
+                      ref={inputRef}
+                    />
+                    {/* <button onClick={() => inputRef.current.click()}>Select Files</button> */}
+                    <h6>
+                      {" "}
+                      {inQueueCount !== -1 && (
+                        <>
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+
+                          {" " +
+                            (inQueueCount + 1) +
+                            " elements in process queue"}
+                        </>
+                      )}
+                    </h6>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+              <Button onClick={sendUploadRequest} variant="contained" size="large">
+                Yükle
+              </Button>
+            </Stack>
+            <Dialog maxWidth="lg" open={!context.isLoggedIn}>
+              <SignIn />
+            </Dialog>
+          </form>
+        </Box>
+      </Container>
     </>
   );
 };

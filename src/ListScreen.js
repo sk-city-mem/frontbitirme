@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Table from "react-bootstrap/Table";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
+
 import "bootstrap/dist/css/bootstrap.min.css";
-import { data } from "./data.js";
-import { data2 } from "./data2.js";
 import axios from "axios";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {
   createSearchParams,
   useNavigate,
@@ -37,6 +31,7 @@ import "./app.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import CustomAppbar from "./CustomAppBar";
 
 function ListScreen() {
   const [data, setData] = useState();
@@ -121,27 +116,7 @@ function ListScreen() {
 
   return (
     <div>
-      <AppBar position="static" >
-        <Toolbar disableGutters>
-          <Stack direction="horizontal" gap={3}>
-            <div className="p-2">
-              <img
-                height="70px"
-                src="https://www.sakarya.edu.tr/assets/img/sau-logo-dikey.jpg"
-              ></img>
-            </div>
-            <Typography
-            variant="h4"
-            noWrap
-            margin="auto"
-            
-          >
-              Sakarya Yerel Gazeteler Veritabanı
-            </Typography>
-          </Stack>
-        </Toolbar>
-      </AppBar>
-
+      <CustomAppbar/>
       <Container>
         <form
           onKeyPress={(e) => {

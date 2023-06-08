@@ -7,6 +7,7 @@ import { AdminAuthContextProvider } from "./AuthProvider";
 import ListScreen from "./ListScreen";
 import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material";
+import {Box} from "@mui/material";
 
 const App = () => {
   const theme = createTheme({
@@ -36,17 +37,19 @@ const App = () => {
       <CssBaseline/>
       <GlobalStyles
           styles={{
-            body: { backgroundColor: "#ebf0f5" },
+            body: { backgroundColor: "#ebf0f5"},
           }}
         />
+      <Box sx={{height:"100vh"}}>
       <AdminAuthContextProvider>
         <Router>
           <Routes>
             <Route path="/" element={<ListScreen />} />
-            <Route path="/dragdrop" element={<DrogDrop />} />
+            <Route path="/upload" element={<DrogDrop />} />
           </Routes>
         </Router>
       </AdminAuthContextProvider>
+      </Box>
     </ThemeProvider>
   )
 }
