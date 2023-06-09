@@ -45,6 +45,7 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<ListScreen />} />
+            <Route path="/admin-list" element={<ListScreen />} />
             <Route path="/upload" element={<DrogDrop />} />
           </Routes>
         </Router>

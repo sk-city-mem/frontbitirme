@@ -574,7 +574,7 @@ const UpdateDialog = ({ dialogOpen, handleClose }) => {
     e.preventDefault();
     try {
       const res = await axios.patch(
-        "http://localhost:3000/pdf-news-doc/" + dialogOpen.formData.id,
+        "http://localhost:3000/pdf-news-doc-orm/" + dialogOpen.formData.id,
         { name: name, date: date },
         {
           headers: {

@@ -1,12 +1,25 @@
-import { AppBar, Toolbar, Typography, Button, Box, Stack } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Stack,
+  Dialog,
+} from "@mui/material";
 import { useAuthContext } from "./AuthProvider";
+import { useLocation } from "react-router-dom";
+import Login from "./SignIn";
+import { useState } from "react";
 
 const CustomAppbar = () => {
+  const location = useLocation();
   const context = useAuthContext();
+  const [openLogin, setOpenLogin] = useState(false);
 
+  console.log(location);
   const handleLogout = () => {
     context.updateToken();
-    localStorage.removeItem("user");
   };
 
   return (
@@ -29,14 +42,29 @@ const CustomAppbar = () => {
             Sakarya Yerel Gazeteler Veritabanı
           </Typography>
           <Box sx={{ flexGrow: 1 }} display="flex" justifyContent="end">
-            {context.isLoggedIn && (
+            {context.isLoggedIn ? (
               <Button onClick={handleLogout} variant="contained" color="error">
                 Çıkış yap
               </Button>
+            ) : (
+              <>
+                {location.pathname === "/admin-list" && (
+                  <Button onClick={()=>setOpenLogin(true)} variant="contained">
+                    Giriş Yap
+                  </Button>
+                )}
+              </>
             )}
           </Box>
         </Stack>
       </Toolbar>
+      <Dialog
+        maxWidth="lg"
+        open={openLogin}
+        onClose={() => setOpenLogin(false)}
+      >
+        <Login />
+      </Dialog>
     </AppBar>
   );
 };

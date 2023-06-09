@@ -133,8 +133,9 @@ const DragDrop = () => {
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${context.token}`,
+          "Content-Type": "multipart/form-data" 
+          
         },
       }
     );
