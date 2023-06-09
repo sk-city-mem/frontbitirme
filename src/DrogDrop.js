@@ -22,6 +22,7 @@ import {
   Divider,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import { CircularProgress, LinearProgress } from "@mui/material";
 
 const DragDrop = () => {
   const [files, setFiles] = useState(null);
@@ -52,19 +53,10 @@ const DragDrop = () => {
   };
 
   useEffect(() => {
+    statusWatchReqeust(lastUploadId)
     const intervalId = setInterval(() => {
       if (lastUploadId) {
-        axios
-          .get(
-            "http://localhost:3000/pdf-news-doc-orm/find-position-in-queue/" +
-              lastUploadId,
-            {
-              headers: {
-                Authorization: `Bearer ${context.token}`,
-              },
-            }
-          )
-          .then((res) => setInqueueCount(res.data));
+        statusWatchReqeust(lastUploadId)
       }
     }, 10000);
 
@@ -73,6 +65,19 @@ const DragDrop = () => {
     };
   }, [lastUploadId]);
 
+  const statusWatchReqeust = (lastUploadId) => {
+    axios
+    .get(
+      "http://localhost:3000/pdf-news-doc-orm/find-position-in-queue/" +
+        lastUploadId,
+      {
+        headers: {
+          Authorization: `Bearer ${context.token}`,
+        },
+      }
+    )
+    .then((res) => setInqueueCount(res.data));
+  }
   // send files to the server // learn from my other video
   const handleUpload = () => {
     console.log(formData.getAll());
@@ -219,24 +224,19 @@ const DragDrop = () => {
                       ref={inputRef}
                     />
                     {/* <button onClick={() => inputRef.current.click()}>Select Files</button> */}
-                    <h6>
+                    <Typography fontStyle="italic">
                       {" "}
                       {inQueueCount !== -1 && (
                         <>
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
+                          
+                          <LinearProgress/>
 
                           {" " +
                             (inQueueCount + 1) +
                             " elements in process queue"}
                         </>
                       )}
-                    </h6>
+                    </Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>
