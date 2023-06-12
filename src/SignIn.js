@@ -74,6 +74,7 @@ export default function Login() {
             fullWidth
             onChange={(e) => setPassword(e.target.value)}
             value={password}
+            type="password"
             variant="filled"
             label="Şifre"
           />

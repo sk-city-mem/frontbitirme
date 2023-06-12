@@ -132,6 +132,11 @@ function ListScreen() {
           },
         }
       );
+      setDeleteDialogOpen({
+        open: false,
+        agreeFunc: () => {},
+      });
+      getData()
     } catch (err) {
       context.updateToken();
     }
