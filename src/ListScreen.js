@@ -27,6 +27,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import "./app.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -36,6 +42,9 @@ import CustomAppbar from "./CustomAppBar";
 import { useAuthContext } from "./AuthProvider";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+import { toast } from "react-toastify";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 function ListScreen() {
   const [data, setData] = useState();
@@ -51,6 +60,51 @@ function ListScreen() {
   const [date2, setDate2] = useState(
     searchParams.get("to") && dayjs(searchParams.get("to"))
   );
+
+  const getAdvencedFields = () => {
+    return searchParams
+      .getAll("must[]")
+      ?.map((val) => {
+        return { type: "must", value:val };
+      })
+      .concat(
+        searchParams.getAll("should[]")?.map((val) => {
+          return { type: "should", value:val  };
+        })
+      )
+      .concat(
+        searchParams.getAll("mustNot[]")?.map((val) => {
+          return { type: "mustNot", value:val };
+        })
+      );
+  };
+  const [advencedQueryFields, setAdvencedQueryFields] = useState(
+    getAdvencedFields() || []
+  );
+
+  const [fuzzy, setFuzzy] = useState(searchParams.get("fuzzy"));
+
+  const addFields = () => {
+    let object = {
+      type: "must",
+      value: "",
+    };
+
+    setAdvencedQueryFields([...advencedQueryFields, object]);
+  };
+
+  const handleAdvencedFieldChange = (event, index) => {
+    console.log(event.target.value);
+    let data = [...advencedQueryFields];
+    data[index][event.target.name] = event.target.value;
+    setAdvencedQueryFields(data);
+  };
+
+  const removeFields = (index) => {
+    let data = [...advencedQueryFields];
+    data.splice(index, 1);
+    setAdvencedQueryFields(data);
+  };
 
   const navigate = useNavigate();
 
@@ -77,8 +131,22 @@ function ListScreen() {
         ...(date2 && { to: new Date(date2).toISOString() }),
         ...(searchName && { name: searchName }),
         ...(pageSize && { pageSize: pageSize }),
+        ...(fuzzy && { fuzzy: fuzzy }),
+        ...(advencedQueryFields && groupByKey(advencedQueryFields, "type")),
       }).toString(),
     });
+  };
+
+  const groupByKey = (list, key) => {
+    let formatted = {};
+    list.forEach((element) => {
+      if (formatted.hasOwnProperty(element[key] + "[]")) {
+        formatted[element[key] + "[]"].push(element.value);
+      } else {
+        formatted = { ...formatted, [element[key] + "[]"]: [element.value] };
+      }
+    });
+    return formatted;
   };
 
   /*
@@ -108,7 +176,13 @@ function ListScreen() {
     console.log("HERE2");
     const url = `http://localhost:3000/pdf-news-doc/?${searchParams}`;
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: 0,
+        },
+      });
       setData(response.data);
       console.log(response.data);
       if (response.status === 200) {
@@ -136,8 +210,13 @@ function ListScreen() {
         open: false,
         agreeFunc: () => {},
       });
-      getData()
+      toast.success("Gazete Silme Başarılı !");
+      getData();
     } catch (err) {
+      setDeleteDialogOpen({
+        open: false,
+        agreeFunc: () => {},
+      });
       context.updateToken();
     }
   };
@@ -208,7 +287,7 @@ function ListScreen() {
                 label="Gazete İsmi"
               />
             </Grid>
-            <Grid item lg={2} sm={5} xs={12}>
+            <Grid item lg={2} sm={4} xs={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs} locale={"en"}>
                 <DatePicker
                   inputFormat="DD/MM/YYYY"
@@ -222,7 +301,7 @@ function ListScreen() {
                 ></DatePicker>
               </LocalizationProvider>
             </Grid>
-            <Grid item lg={2} sm={5} xs={12}>
+            <Grid item lg={2} sm={4} xs={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs} locale={"en"}>
                 <DatePicker
                   inputFormat="DD/MM/YYYY"
@@ -236,7 +315,21 @@ function ListScreen() {
                 ></DatePicker>
               </LocalizationProvider>
             </Grid>
-            <Grid item lg={2} sm={2} xs={12}>
+            <Grid item lg={1.2} sm={2.2} xs={6}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={fuzzy}
+                    onChange={(event) => setFuzzy(event.target.checked)}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={
+                  <Typography variant="body2">Yakın Sonuçları Getir</Typography>
+                }
+              />
+            </Grid>
+            <Grid item lg={0.8} sm={1.8} xs={6}>
               <Button
                 fullWidth
                 sx={{ minHeight: "100%" }}
@@ -247,6 +340,71 @@ function ListScreen() {
                 Ara
               </Button>
             </Grid>
+
+            {advencedQueryFields.length > 0 ? (
+              <>
+                {advencedQueryFields.map((form, index) => {
+                  return (
+                    <Grid item container lg={4} sm={6} xs={12} key={index}>
+                      <Grid item xs={4}>
+                        <FormControl variant="filled" fullWidth>
+                          <InputLabel id="demo-simple-select-filled-label">
+                            Operatör
+                          </InputLabel>
+                          <Select
+                            name="type"
+                            labelId="demo-simple-select-filled-label"
+                            id="demo-simple-select-filled"
+                            onChange={(event) =>
+                              handleAdvencedFieldChange(event, index)
+                            }
+                            value={form.type}
+                          >
+                            <MenuItem value={"must"}>AND</MenuItem>
+                            <MenuItem value={"should"}>OR</MenuItem>
+                            <MenuItem value={"mustNot"}>NOT</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={7}>
+                        <TextField
+                          fullWidth
+                          name="value"
+                          label="Değer"
+                          onChange={(event) =>
+                            handleAdvencedFieldChange(event, index)
+                          }
+                          value={form.value}
+                          variant="filled"
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Button
+                          color="error"
+                          onClick={() => removeFields(index)}
+                          sx={{ padding: 1, minWidth: 24, height: "100%" }}
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  );
+                })}
+                <Grid item xs={1}>
+                  <Button onClick={() => addFields()} sx={{ height: "100%" }}>
+                    <AddCircleOutlineIcon />
+                  </Button>
+                </Grid>
+              </>
+            ) : (
+              <Button
+                style={{ textTransform: "none", marginLeft: 12 }}
+                size="small"
+                onClick={() => addFields()}
+              >
+                Gelişmiş arama
+              </Button>
+            )}
           </Grid>
         </form>
 
@@ -497,6 +655,7 @@ function ListScreen() {
           handleClose={handleClose}
         />
         <UpdateDialog
+          getData={getData}
           dialogOpen={updateDialogOpen}
           handleClose={handleCloseUpdate}
         />
@@ -560,7 +719,7 @@ function DeleteAlertDialog({ dialogOpen, handleClose }) {
   );
 }
 
-const UpdateDialog = ({ dialogOpen, handleClose }) => {
+const UpdateDialog = ({ dialogOpen, handleClose, getData }) => {
   console.log(dialogOpen.formData.name);
   const [name, setName] = useState(dialogOpen.formData.name);
   const [date, setDate] = useState(
@@ -587,6 +746,9 @@ const UpdateDialog = ({ dialogOpen, handleClose }) => {
           },
         }
       );
+      toast.success("Gazete Güncelleme Başarılı !");
+      handleClose && handleClose();
+      getData && getData();
     } catch (err) {
       context.updateToken();
     }

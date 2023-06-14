@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import { Card } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const context = useAuthContext();
@@ -25,14 +26,11 @@ export default function Login() {
       password,
     });
     if ("access_token" in response.data) {
-      swal("Success", "Login Successfull", "success", {
-        buttons: false,
-        timer: 2000,
-      }).then((value) => {
-        context.updateToken(response.data.access_token);
-      });
+      toast.success("Başarılı bir şekilde giriş yapıldı");
+      context.updateToken(response.data.access_token);
+    
     } else {
-      swal("Failed", response.message, "error");
+      toast.success("Girilen bilgiler hatalı");
     }
   };
   // useEffect(() => {

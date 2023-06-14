@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { CircularProgress, LinearProgress } from "@mui/material";
+import { toast } from "react-toastify";
 
 const DragDrop = () => {
   const [files, setFiles] = useState(null);
@@ -53,17 +54,21 @@ const DragDrop = () => {
   };
 
   useEffect(() => {
-    statusWatchReqeust(lastUploadId)
-    const intervalId = setInterval(() => {
-      if (lastUploadId) {
-        statusWatchReqeust(lastUploadId)
-      }
-    }, 10000);
+    let intervalId;
+    if(context.isLoggedIn){
+      statusWatchReqeust(lastUploadId)
+      intervalId = setInterval(() => {
+        if (lastUploadId) {
+          statusWatchReqeust(lastUploadId)
+        }
+      }, 10000);
+    }
+
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [lastUploadId]);
+  }, [lastUploadId,context.isLoggedIn]);
 
   const statusWatchReqeust = (lastUploadId) => {
     axios
@@ -125,9 +130,10 @@ const DragDrop = () => {
 
   const uploadRequest = async (file) => {
     const formData = new FormData();
+    formData.append("name", name);
     formData.append("file", file);
     console.log("file", file);
-    formData.append("name", name);
+
     const res = await axios.post(
       "http://localhost:3000/pdf-news-doc-orm/upload/",
       formData,
@@ -140,6 +146,7 @@ const DragDrop = () => {
       }
     );
     updateLastUploadId(res.data.id);
+    toast.success("Gazete yükleme işlemi kuyruğa eklendi");
   };
 
   const token = localStorage.getItem("accessToken");
