@@ -210,6 +210,7 @@ function ListScreen() {
         open: false,
         agreeFunc: () => {},
       });
+      if(res.status === 200)
       toast.success("Gazete Silme Başarılı !");
       getData();
     } catch (err) {

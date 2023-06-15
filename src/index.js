@@ -54,7 +54,9 @@ const App = () => {
             body: { backgroundColor: "#ebf0f5"},
           }}
         />
-      <ToastContainer/>
+      <ToastContainer
+        position="bottom-right"
+      />
       <Box sx={{height:"100vh"}}>
       <AdminAuthContextProvider>
         <Router>

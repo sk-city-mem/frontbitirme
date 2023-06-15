@@ -31,7 +31,7 @@ const DragDrop = () => {
   const [smShow, setSmShow] = useState(false);
   const context = useAuthContext();
   const [name, setName] = useState();
-  const [inQueueCount, setInqueueCount] = useState(-1);
+  const [inQueueCount, setInqueueCount] = useState(-2);
   const [lastUploadId, setLastUploadId] = useState(
     localStorage.getItem("last_upload_id")
   );
@@ -55,20 +55,23 @@ const DragDrop = () => {
 
   useEffect(() => {
     let intervalId;
-    if(context.isLoggedIn){
-      statusWatchReqeust(lastUploadId)
+    statusWatchReqeust(lastUploadId)
+    if(context.isLoggedIn && inQueueCount>-1){
       intervalId = setInterval(() => {
         if (lastUploadId) {
           statusWatchReqeust(lastUploadId)
         }
       }, 10000);
     }
+    if(inQueueCount===-1){
+      toast.success("Kuyrukta kalan işlem bulunmamakta");
+    }
 
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [lastUploadId,context.isLoggedIn]);
+  }, [lastUploadId,context.isLoggedIn,inQueueCount]);
 
   const statusWatchReqeust = (lastUploadId) => {
     axios
