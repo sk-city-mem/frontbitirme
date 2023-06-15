@@ -31,7 +31,7 @@ const DragDrop = () => {
   const [smShow, setSmShow] = useState(false);
   const context = useAuthContext();
   const [name, setName] = useState();
-  const [inQueueCount, setInqueueCount] = useState(-2);
+  const [inQueueCount, setInqueueCount] = useState(-1);
   const [lastUploadId, setLastUploadId] = useState(
     localStorage.getItem("last_upload_id")
   );
@@ -64,7 +64,7 @@ const DragDrop = () => {
       }, 10000);
     }
     if(inQueueCount===-1){
-      toast.success("Kuyrukta kalan işlem bulunmamakta");
+      //toast.success("Kuyrukta kalan işlem bulunmamakta");
     }
 
 

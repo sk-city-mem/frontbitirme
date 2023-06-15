@@ -162,7 +162,10 @@ function ListScreen() {
       searchParams.get("content") ||
       searchParams.get("from") ||
       searchParams.get("to") ||
-      searchParams.get("name")
+      searchParams.get("name") ||
+      searchParams.get("must[]") ||
+      searchParams.get("should[]") ||
+      searchParams.get("mustNot[]")
     ) {
       getData();
     } else {
@@ -428,7 +431,7 @@ function ListScreen() {
                     <CardMedia
                       component="img"
                       sx={{ width: 220 }}
-                      image={d?.result?.fileURL + "-thumbnail.jpg"}
+                      image={d?.result?.fileURL + "-thumbnail.1.jpg"}
                       alt="Resime erişilirken hata oluştu"
                     />
                     <Box
@@ -571,7 +574,7 @@ function ListScreen() {
                     </CardContent>
                     <CardMedia
                       component="img"
-                      image={d?.result?.fileURL + "-thumbnail.jpg"}
+                      image={d?.result?.fileURL + "-thumbnail.1.jpg"}
                       alt="Resime erişilirken hata oluştu"
                     />
 
@@ -662,7 +665,7 @@ function ListScreen() {
         />
         <Box display="flex" justifyContent="center">
           <Pagination
-            count={data?.total?.value > 0 ? data?.total?.value / pageSize : 0}
+            count={data?.total?.value > 0 ? Math.ceil(data?.total?.value / pageSize ): 0}
             page={currentPage}
             onChange={changeCPage}
           />
